@@ -1,0 +1,8 @@
+Resource,Type,Monthly_Cost,Status,Owner,Environment
+dev-vm-01,Virtual Machine,800,Running 24/7,DevTeam,dev
+prod-db-main,SQL Database,1200,Idle 80%,DataTeam,prod
+storage-backup,Storage Account,450,Unused,OpsTeam,backup
+api-test-01,App Service,300,Running,QATeam,test
+ml-compute,VM,2500,Running,DataScience,dev
+cdn-old,CDN,600,Deprecated,Marketing,legacy
+TOTAL,Summary,6750,N/A,N/A,N/A

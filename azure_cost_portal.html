@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azure Cost Management Portal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #1a1a1a;
+      padding: 2rem;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .wrap { max-width: 960px; margin: 0 auto; }
+
+    .topbar {
+      background: #1e2d40;
+      color: #fff;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .topbar-title { font-size: 18px; font-weight: 600; }
+    .topbar-meta { font-size: 13px; color: #aab4bf; margin-top: 3px; }
+    .topbar-total { font-size: 28px; font-weight: 700; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 1.25rem;
+    }
+    .metric { background: #fff; border: 1px solid #e2e6ea; border-radius: 8px; padding: 0.9rem 1rem; }
+    .mlabel { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; margin-bottom: 5px; }
+    .mval { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+    .mval.danger { color: #b91c1c; }
+    .mval.success { color: #166534; }
+    .mval.warning { color: #92400e; }
+
+    .tabs { display: flex; gap: 4px; border-bottom: 1px solid #e2e6ea; margin-bottom: 1.25rem; }
+    .tab {
+      padding: 8px 18px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      color: #6b7280;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .tab:hover { color: #1a1a1a; }
+    .tab.active { color: #1a1a1a; font-weight: 600; border-bottom: 2px solid #1a1a1a; }
+
+    .pane { display: none; }
+    .pane.active { display: block; }
+
+    .bar-row { margin-bottom: 12px; }
+    .bar-meta { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+    .bar-name { font-weight: 600; }
+    .bar-info { color: #6b7280; }
+    .bar-track { height: 10px; background: #e9ecef; border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 99px; }
+
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+    .badge-danger  { background: #fee2e2; color: #991b1b; }
+    .badge-success { background: #dcfce7; color: #14532d; }
+
+    .insight {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: 13px;
+      line-height: 1.65;
+      margin-top: 1rem;
+    }
+
+    .res-list { display: flex; flex-direction: column; gap: 10px; }
+    .res-card { background: #fff; border: 1px solid #e2e6ea; border-radius: 8px; padding: 1rem 1.25rem; }
+    .res-card.waste { background: #fff5f5; border-left: 4px solid #b91c1c; border-radius: 0 8px 8px 0; }
+    .res-card.ok    { background: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 0 8px 8px 0; }
+    .res-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; flex-wrap: wrap; gap: 6px; }
+    .res-name { font-size: 14px; font-weight: 600; }
+    .res-cost-danger { font-size: 14px; font-weight: 600; color: #b91c1c; }
+    .res-cost-ok     { font-size: 14px; font-weight: 600; color: #166534; }
+    .res-meta { font-size: 12px; color: #6b7280; margin-bottom: 10px; }
+    .res-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .btn {
+      font-size: 12px; font-family: inherit; padding: 5px 12px;
+      border-radius: 6px; cursor: pointer;
+      border: 1px solid #d1d5db; background: #fff; color: #1a1a1a;
+    }
+    .btn:hover { background: #f3f4f6; }
+
+    .rec-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+    .rec-card {
+      background: #fff; border: 1px solid #e2e6ea; border-radius: 8px;
+      padding: 1rem 1.25rem; display: flex; justify-content: space-between;
+      align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .rec-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .rec-desc  { font-size: 12px; color: #6b7280; }
+    .rec-save  { font-size: 16px; font-weight: 700; color: #166534; white-space: nowrap; }
+
+    .rec-total {
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+      padding: 1rem 1.25rem; display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px;
+    }
+    .rec-total-label { font-size: 13px; font-weight: 600; color: #166534; }
+    .rec-total-val   { font-size: 20px; font-weight: 700; color: #166534; }
+
+    .next-steps { background: #fff; border: 1px solid #e2e6ea; border-radius: 8px; padding: 1rem 1.25rem; }
+    .next-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+    .next-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 7px 0; border-bottom: 1px solid #f3f4f6;
+      font-size: 13px; color: #4b5563;
+    }
+    .next-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .next-dot { width: 6px; height: 6px; border-radius: 50%; background: #9ca3af; margin-top: 7px; flex-shrink: 0; }
+
+    .challenge-list { display: flex; flex-direction: column; gap: 10px; }
+    .challenge-card { background: #fff; border: 1px solid #e2e6ea; border-radius: 8px; padding: 1rem 1.25rem; }
+    .challenge-q { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+    .challenge-btn {
+      font-size: 12px; font-family: inherit; padding: 5px 14px;
+      border-radius: 6px; cursor: pointer;
+      border: 1px solid #d1d5db; background: #fff; color: #1a1a1a;
+    }
+    .challenge-btn:hover { background: #f3f4f6; }
+    .challenge-a {
+      display: none; margin-top: 10px; font-size: 13px;
+      color: #4b5563; line-height: 1.65;
+      border-top: 1px solid #f3f4f6; padding-top: 10px;
+    }
+    .challenge-a.open { display: block; }
+
+    code {
+      background: #f3f4f6; border: 1px solid #e2e6ea;
+      border-radius: 4px; padding: 1px 5px;
+      font-size: 11px; font-family: monospace;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .topbar { flex-direction: column; }
+      .rec-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Azure cost management</div>
+      <div class="topbar-meta">April 2026 &nbsp;&middot;&nbsp; 6 resources tracked</div>
+    </div>
+    <div class="topbar-total">$6,750 / mo</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="mlabel">Total spend</div><div class="mval">$6,750</div></div>
+    <div class="metric"><div class="mlabel">Confirmed waste</div><div class="mval danger">$3,050</div></div>
+    <div class="metric"><div class="mlabel">Recoverable</div><div class="mval success">$1,520</div></div>
+    <div class="metric"><div class="mlabel">Annual saving</div><div class="mval warning">$18,240</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('overview',this)">Overview</button>
+    <button class="tab" onclick="switchTab('resources',this)">Resources</button>
+    <button class="tab" onclick="switchTab('recommendations',this)">Recommendations</button>
+    <button class="tab" onclick="switchTab('challenge',this)">Challenge</button>
+  </div>
+
+  <!-- Overview -->
+  <div id="overview" class="pane active">
+    <div class="bar-row">
+      <div class="bar-meta"><span class="bar-name">ml-compute</span><span class="bar-info">$2,500 &middot; 37% &middot; <span class="badge badge-success">OK</span></span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:37%;background:#166534;"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-meta"><span class="bar-name">prod-db-main</span><span class="bar-info">$1,200 &middot; 18% &middot; <span class="badge badge-danger">Waste</span></span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:18%;background:#b91c1c;"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-meta"><span class="bar-name">dev-vm-01</span><span class="bar-info">$800 &middot; 12% &middot; <span class="badge badge-danger">Waste</span></span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:12%;background:#b91c1c;"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-meta"><span class="bar-name">cdn-old</span><span class="bar-info">$600 &middot; 9% &middot; <span class="badge badge-danger">Waste</span></span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:9%;background:#b91c1c;"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-meta"><span class="bar-name">storage-backup</span><span class="bar-info">$450 &middot; 7% &middot; <span class="badge badge-danger">Waste</span></span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:7%;background:#b91c1c;"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-meta"><span class="bar-name">api-test-01</span><span class="bar-info">$300 &middot; 4% &middot; <span class="badge badge-success">OK</span></span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:4%;background:#1d4ed8;"></div></div>
+    </div>
+    <div class="insight">
+      <strong>FinOps principle:</strong> The goal is not to cut costs randomly &mdash; it is to ask
+      whether each resource is delivering value. ml-compute costs $2,500 and is fully justified.
+      storage-backup costs $450 and delivers nothing. Context matters more than the number.
+    </div>
+  </div>
+
+  <!-- Resources -->
+  <div id="resources" class="pane">
+    <div class="res-list">
+      <div class="res-card waste">
+        <div class="res-top"><span class="res-name">dev-vm-01</span><span class="res-cost-danger">$800 / mo</span></div>
+        <div class="res-meta">Virtual machine &nbsp;&middot;&nbsp; Running 24/7 &nbsp;&middot;&nbsp; Owner: Dev team</div>
+        <div class="res-actions">
+          <button class="btn" onclick="alert('Action: Set auto-shutdown — stop at 7pm weekdays, off all weekend. Saves ~$320/mo.')">Schedule shutdown</button>
+          <button class="btn" onclick="alert('Action: Add tags — environment:dev, owner:devteam, auto-shutdown:yes')">Add tags</button>
+        </div>
+      </div>
+      <div class="res-card waste">
+        <div class="res-top"><span class="res-name">prod-db-main</span><span class="res-cost-danger">$1,200 / mo</span></div>
+        <div class="res-meta">SQL database &nbsp;&middot;&nbsp; Idle 80% &nbsp;&middot;&nbsp; Owner: Data team</div>
+        <div class="res-actions">
+          <button class="btn" onclick="alert('Action: Review DTU usage. Downgrade to a lower tier — saves ~$600/mo.')">Right-size</button>
+          <button class="btn" onclick="alert('Action: Enable Azure SQL auto-scaling to handle spikes without permanent over-provisioning.')">Auto-scale</button>
+        </div>
+      </div>
+      <div class="res-card waste">
+        <div class="res-top"><span class="res-name">storage-backup</span><span class="res-cost-danger">$450 / mo</span></div>
+        <div class="res-meta">Storage account &nbsp;&middot;&nbsp; Unused &nbsp;&middot;&nbsp; Owner: Ops team</div>
+        <div class="res-actions">
+          <button class="btn" onclick="alert('Action: Confirm with Ops team that no dependencies exist, then delete.')">Confirm and delete</button>
+          <button class="btn" onclick="alert('Action: Set lifecycle policy to auto-archive blobs after 30 days if deletion is not yet approved.')">Set lifecycle policy</button>
+        </div>
+      </div>
+      <div class="res-card ok">
+        <div class="res-top"><span class="res-name">api-test-01</span><span class="res-cost-ok">$300 / mo</span></div>
+        <div class="res-meta">App service &nbsp;&middot;&nbsp; Running &nbsp;&middot;&nbsp; Owner: QA team</div>
+        <div class="res-actions">
+          <button class="btn" onclick="alert('Action: Set up Azure Monitor alerts for request count and error rate. Review if it can scale down outside testing windows.')">Monitor usage</button>
+        </div>
+      </div>
+      <div class="res-card ok">
+        <div class="res-top"><span class="res-name">ml-compute</span><span class="res-cost-ok">$2,500 / mo</span></div>
+        <div class="res-meta">Virtual machine &nbsp;&middot;&nbsp; Running &nbsp;&middot;&nbsp; Owner: Data science</div>
+        <div class="res-actions">
+          <button class="btn" onclick="alert('Action: A 1-year Reserved Instance could save 30-40% (~$750-$1,000/mo) with no workflow change.')">Check reserved instances</button>
+        </div>
+      </div>
+      <div class="res-card waste">
+        <div class="res-top"><span class="res-name">cdn-old</span><span class="res-cost-danger">$600 / mo</span></div>
+        <div class="res-meta">CDN &nbsp;&middot;&nbsp; Deprecated &nbsp;&middot;&nbsp; Owner: Marketing</div>
+        <div class="res-actions">
+          <button class="btn" onclick="alert('Action: Confirm zero traffic via CDN analytics, get sign-off from Marketing, then delete the endpoint.')">Safe decommission</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendations -->
+  <div id="recommendations" class="pane">
+    <div class="rec-list">
+      <div class="rec-card">
+        <div><div class="rec-title">Right-size prod-db-main</div><div class="rec-desc">Idle 80% &mdash; move to a lower tier, enable auto-scaling for spikes</div></div>
+        <div class="rec-save">$600 / mo</div>
+      </div>
+      <div class="rec-card">
+        <div><div class="rec-title">Delete cdn-old</div><div class="rec-desc">Deprecated CDN still billing &mdash; verify no traffic, then remove</div></div>
+        <div class="rec-save">$600 / mo</div>
+      </div>
+      <div class="rec-card">
+        <div><div class="rec-title">Delete storage-backup</div><div class="rec-desc">Unused storage account &mdash; confirm with Ops team and remove</div></div>
+        <div class="rec-save">$450 / mo</div>
+      </div>
+      <div class="rec-card">
+        <div><div class="rec-title">Schedule dev-vm-01 shutdown</div><div class="rec-desc">Auto-shutdown on weekends and evenings &mdash; dev VMs should not run 24/7</div></div>
+        <div class="rec-save">$320 / mo</div>
+      </div>
+    </div>
+    <div class="rec-total">
+      <div class="rec-total-label">Total recoverable per month</div>
+      <div class="rec-total-val">$1,520 &nbsp;&middot;&nbsp; $18,240 / yr</div>
+    </div>
+    <div class="next-steps">
+      <div class="next-title">Steps to prevent repeat waste</div>
+      <div class="next-item"><div class="next-dot"></div><div>Require <code>owner</code>, <code>environment</code>, <code>purpose</code>, <code>expiry</code> tags on every resource at creation</div></div>
+      <div class="next-item"><div class="next-dot"></div><div>Set a budget alert at $1,000 / month per resource group &mdash; auto-escalates to the owner</div></div>
+      <div class="next-item"><div class="next-dot"></div><div>Run this cost review every two weeks, not monthly &mdash; waste compounds fast</div></div>
+      <div class="next-item"><div class="next-dot"></div><div>Enforce auto-shutdown for all VMs tagged <code>environment:dev</code></div></div>
+    </div>
+  </div>
+
+  <!-- Challenge -->
+  <div id="challenge" class="pane">
+    <div class="challenge-list">
+      <div class="challenge-card">
+        <div class="challenge-q">1. Which resource is the single biggest waste, and why?</div>
+        <button class="challenge-btn" onclick="toggleAnswer(this)">Show answer</button>
+        <div class="challenge-a">prod-db-main at $1,200/mo. Idle 80% of the time means you are paying for 5x more capacity than you actually use. cdn-old is also 100% waste but costs less.</div>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-q">2. What would you do to fix dev-vm-01?</div>
+        <button class="challenge-btn" onclick="toggleAnswer(this)">Show answer</button>
+        <div class="challenge-a">Add an auto-shutdown schedule: off at 7pm weekdays, off all weekend. Saves ~$320/mo with zero impact on dev work. Tag it <code>environment:dev</code> so the policy applies to future dev VMs automatically.</div>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-q">3. To save $2,025 (30%), which resources would you optimise?</div>
+        <button class="challenge-btn" onclick="toggleAnswer(this)">Show answer</button>
+        <div class="challenge-a">Delete cdn-old ($600) + right-size prod-db-main ($600) + delete storage-backup ($450) = $1,650. Add dev-vm-01 evening shutdown (~$375). Total: ~$2,025 &mdash; without touching the two justified resources.</div>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-q">4. What tags would prevent this next month?</div>
+        <button class="challenge-btn" onclick="toggleAnswer(this)">Show answer</button>
+        <div class="challenge-a">Enforce: <code>owner</code>, <code>environment</code>, <code>purpose</code>, <code>expiry</code>, <code>auto-shutdown</code>. Block resource creation if tags are missing. Alert within 24 hours on non-compliant resources.</div>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-q">5. What would you ask the data science team about ml-compute?</div>
+        <button class="challenge-btn" onclick="toggleAnswer(this)">Show answer</button>
+        <div class="challenge-a">"Is this workload predictable enough for Reserved Instances? A 1-year commitment saves 30&ndash;40% (~$750&ndash;$1,000/mo) with no workflow change. Also &mdash; does it run 24/7 or only during working hours?"</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+  function toggleAnswer(btn) {
+    var a = btn.nextElementSibling;
+    var open = a.classList.toggle('open');
+    btn.textContent = open ? 'Hide answer' : 'Show answer';
+  }
+</script>
+</body>
+</html>

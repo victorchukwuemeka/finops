@@ -1,0 +1,29 @@
+=== INSTRUCTOR SOLUTION KEY ===
+
+1. BIGGEST COST: ml-compute ($2,500) — but it's legitimate (DataScience team).
+   WASTEFUL: prod-db-main ($1,200) — idle 80% is the red flag.
+
+2. prod-db-main answer: B or C (right-size or auto-scale). Potential savings: $600/month.
+
+3. dev-vm-01: Should NOT run 24/7. Use auto-shutdown or schedule.
+   Potential savings: $320/month (40% of $800).
+
+4. Top 3 to optimize:
+   - prod-db-main: $1,200 → $600 (50% cut)
+   - dev-vm-01: $800 → $480 (40% cut)
+   - cdn-old: $600 → $0 (delete it)
+   = Total savings: $1,020/month (15% of total)
+
+5. Tags to add:
+   - env:dev/prod/test
+   - owner:team-name
+   - cost-center:code
+   - auto-shutdown:true/false
+   - business-value:high/medium/low
+
+BONUS CALCULATION:
+- dev-vm-01 weekend shutdown: $800 × 0.4 = $320 saved
+- prod-db-main right-size: $1,200 × 0.5 = $600 saved
+- cdn-old delete: $600 × 1.0 = $600 saved
+= TOTAL POTENTIAL SAVINGS: $1,520/month (22.5% reduction!)
+

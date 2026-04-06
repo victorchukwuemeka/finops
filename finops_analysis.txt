@@ -1,0 +1,26 @@
+=== FINOPS PRACTICAL: COST ANALYSIS CHALLENGE ===
+
+You are a FinOps engineer. Your company spent $6,750 last month on Azure.
+Your goal: Find waste and recommend cuts.
+
+QUESTIONS FOR YOUR STUDENTS:
+
+1. Which resource is the BIGGEST cost driver? Why might it be wasteful?
+
+2. The "prod-db-main" is idle 80% of the time. What would you recommend?
+   a) Delete it
+   b) Right-size it (smaller instance)
+   c) Use auto-scaling
+   d) Move to reserved instances
+
+3. "dev-vm-01" runs 24/7. Should it? What's a better approach?
+
+4. If you could cut 30% of costs ($2,025), which 2-3 resources would you optimize?
+
+5. What tags would you add to prevent this waste in the future?
+
+BONUS: Calculate potential savings if you:
+- Shut down dev-vm-01 on weekends (assume 40% savings)
+- Right-size prod-db-main (assume 50% savings)
+- Delete cdn-old (assume 100% savings)
+
