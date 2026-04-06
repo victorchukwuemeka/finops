@@ -7,20 +7,20 @@
 - Compare cost visibility tools (native + open-source).
 - Build a basic cost dashboard and allocation report.
 
-## 1) Cloud cost models & billing constructs
+## 1) Cloud cost models & billing constructs (with explanation)
 ### Cost models
-- **Pay‑as‑you‑go:** Variable cost tied to usage.
-- **Committed use (Reserved/Committed/Savings Plans):** Discounted pricing for predictable workloads.
-- **Spot / Preemptible:** Deep discounts for interruptible workloads.
-- **Hybrid:** Mix of committed + on‑demand + spot for balance.
+- **Pay‑as‑you‑go:** Variable cost tied to usage. Great for spikes and new workloads, but easy to overspend if resources run 24/7.
+- **Committed use (Reserved/Committed/Savings Plans):** Discounted pricing for predictable workloads. Best for steady systems like core databases.
+- **Spot / Preemptible:** Deep discounts for interruptible workloads. Best for batch jobs (analytics, testing).
+- **Hybrid:** Mix of committed + on‑demand + spot for balance. Most real environments end up here.
 
 ### Billing constructs (what shows up on the bill)
-- **Subscription / Project / Account:** Billing boundary.
-- **Resource Group / Tag / Label:** Allocation boundaries.
-- **Meter / SKU:** The specific billable item.
-- **Usage vs. fixed fees:** Consumption‑based vs. flat recurring charges.
+- **Subscription / Project / Account:** Billing boundary. Where the invoice is generated.
+- **Resource Group / Tag / Label:** Allocation boundaries. These help split costs by team or service.
+- **Meter / SKU:** The specific billable item (e.g., storage GB, VM hours).
+- **Usage vs. fixed fees:** Consumption‑based vs. flat recurring charges (e.g., support plans).
 
-## 2) Tagging strategy for visibility
+## 2) Tagging strategy for visibility (with explanation)
 Tagging is the backbone of allocation and accountability.
 
 ### Recommended tag set (minimum viable)
@@ -33,11 +33,11 @@ Tagging is the backbone of allocation and accountability.
 - `auto-shutdown` — true/false
 
 ### Tagging rules
-- Make tags **mandatory at creation**.
-- Enforce tags with policy (block if missing).
-- Standardize values (drop‑downs or allowlists).
+- Make tags **mandatory at creation** so costs are traceable from day one.
+- Enforce tags with policy (block if missing) to prevent “unknown owner” costs.
+- Standardize values (drop‑downs or allowlists) so reports don’t split on typos.
 
-## 3) Chargeback vs. Showback
+## 3) Chargeback vs. Showback (with explanation)
 ### Showback
 - Report costs to teams but do not bill them.
 - Best for early adoption or cultural change.
@@ -50,7 +50,7 @@ Tagging is the backbone of allocation and accountability.
 - **Start with showback** to build trust.
 - **Move to chargeback** once data quality and ownership are strong.
 
-## 4) Tools for cost visibility
+## 4) Tools for cost visibility (with explanation)
 ### Native tools
 - **Azure Cost Management** — budgets, alerts, allocation by tags.
 - **AWS Cost Explorer** — reports, RI/SP analysis.
@@ -66,7 +66,7 @@ Tagging is the backbone of allocation and accountability.
 
 ### Lab steps (60–75 minutes)
 1. **Ingest data**
-   - Use the provided monthly cost CSV.
+   - Use the provided sample CSV in `day2/day2_sample_costs.csv`.
 2. **Normalize fields**
    - Ensure `owner`, `environment`, `cost-center`, `business-service`.
 3. **Allocate spend**
@@ -141,13 +141,18 @@ Tagging is the backbone of allocation and accountability.
 - Tag policy enforcement via cloud policy engine
 - Weekly showback report
 
-## 8) Discussion prompts
+## 8) Practical file (no cloud account needed)
+Use the included mock data and worksheet to run Day 2 end‑to‑end without any cloud account:
+- `day2/day2_sample_costs.csv` — sample monthly cost export
+- `day2/day2_practical_exercises.md` — step‑by‑step tasks and expected outputs
+
+## 9) Discussion prompts
 - Which tags are missing in your environment today?
 - Who should own tagging policy enforcement?
 - Which teams would resist chargeback and why?
 - How would you explain “unit economics” to a non‑technical leader?
 
-## 9) Wrap‑up summary
+## 10) Wrap‑up summary
 - Inform Phase is about **visibility and accountability**.
 - Tagging quality drives the accuracy of every report.
 - Showback builds culture; chargeback enforces accountability.

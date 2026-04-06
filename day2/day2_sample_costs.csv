@@ -1,0 +1,13 @@
+Resource,Type,Monthly_Cost,Usage_Model,Status,Owner,Environment,Cost_Center,Business_Service
+core-db-prod,SQL Database,1400,Committed,Running,CoreBanking,prod,CC100,Core Banking
+loan-api-prod,App Service,780,PayGo,Running,Loans,prod,CC110,Digital Channels
+ussd-gateway,VM,520,PayGo,Running,Channels,prod,CC110,Digital Channels
+credit-scoring,VM,1200,Spot,Batch,Data,prod,CC120,Analytics
+data-lake,Storage,650,PayGo,Running,Data,prod,CC120,Analytics
+backup-archive,Storage,300,PayGo,Unused,Ops,prod,CC130,Risk & Compliance
+dev-vm-01,VM,420,PayGo,Running,Dev,dev,CC200,Engineering
+qa-api-test,App Service,260,PayGo,Running,QA,test,CC210,Quality Assurance
+legacy-cdn,CDN,480,PayGo,Deprecated,Marketing,legacy,CC300,Shared Services
+log-analytics,Monitoring,390,PayGo,Running,Security,prod,CC140,Risk & Compliance
+batch-kyc,Functions,240,PayGo,Scheduled,Risk,prod,CC140,Risk & Compliance
+etl-nightly,Data Factory,510,PayGo,Scheduled,Data,prod,CC120,Analytics
