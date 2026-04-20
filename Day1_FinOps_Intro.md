@@ -10,6 +10,10 @@
 ## 1) What is FinOps?
 FinOps (Cloud Financial Management) is a cultural and operational practice that enables **shared responsibility** for cloud costs, **data‑driven decisions**, and **continuous optimization** of spend while delivering business value.
 
+
+
+
+
 ### Key idea
 Cloud cost is **variable**, not fixed. FinOps builds the habits, policies, and accountability to control that variable cost without slowing delivery.
 
