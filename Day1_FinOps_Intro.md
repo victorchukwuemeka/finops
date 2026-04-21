@@ -7,6 +7,14 @@
 - Identify cloud cost governance challenges in regulated financial institutions.
 - Practice mapping LAPO MfB cloud spend into meaningful business categories.
 
+## Session agenda
+- 10 min: FinOps fundamentals
+- 10 min: Why FinOps matters in financial services
+- 10 min: Principles, roles, and operating model
+- 15 min: Cost governance challenges and examples
+- 15 min: Hands‑on categorization exercise
+- 5 min: Debrief and action points
+
 ## 1) What is FinOps?
 FinOps (Cloud Financial Management) is a cultural and operational practice that enables **shared responsibility** for cloud costs, **data‑driven decisions**, and **continuous optimization** of spend while delivering business value.
 
@@ -16,6 +24,18 @@ FinOps (Cloud Financial Management) is a cultural and operational practice that 
 
 ### Key idea
 Cloud cost is **variable**, not fixed. FinOps builds the habits, policies, and accountability to control that variable cost without slowing delivery.
+
+### Simple working definition
+FinOps helps an organization answer three questions continuously:
+- What are we spending?
+- Why are we spending it?
+- Are we getting enough business value in return?
+
+### What FinOps is not
+- It is **not** only a finance activity.
+- It is **not** a one‑time cost cutting project.
+- It is **not** “use less cloud at all costs.”
+- It is **not** successful if savings damage uptime, security, or customer experience.
 
 ## 2) Evolution of FinOps (Why it exists)
 - **On‑prem era:** Fixed hardware costs, annual procurement cycles, slow change.
@@ -27,6 +47,14 @@ Cloud cost is **variable**, not fixed. FinOps builds the habits, policies, and a
 - **Regulatory scrutiny:** Auditable cost controls are mandatory.
 - **Growth volatility:** Loan demand and transaction volume spike unpredictably.
 - **Customer trust:** Service disruptions from cost cuts are unacceptable.
+
+### Typical cloud cost drivers in a microfinance environment
+- Core banking databases running 24/7
+- API and mobile channel traffic growth
+- Backup, retention, and disaster recovery storage
+- Logging, monitoring, and security tooling
+- Test and development environments left running after hours
+- Analytics and reporting workloads that spike at month end
 
 ## 3) Business case for microfinance
 FinOps enables **cost control without blocking growth**:
@@ -40,6 +68,13 @@ FinOps enables **cost control without blocking growth**:
 - Cost per transaction (USSD, mobile app, API)
 - Cost per loan originated
 - Cost per compliance report
+
+### Why leadership cares
+- **CFO:** Better forecasting and fewer billing surprises
+- **CTO:** Efficient engineering without slowing teams down
+- **COO:** Stable operations and service continuity
+- **Risk/Compliance:** Evidence that spend is controlled and auditable
+- **Business Heads:** Clear visibility into which products or channels are expensive to run
 
 ## 4) Updated FinOps Principles (2025)
 Use these as the foundation for every discussion and decision:
@@ -55,7 +90,44 @@ Use these as the foundation for every discussion and decision:
 5. **Variable Cost Leverage**
    - Use autoscaling, schedules, and commitments to match demand.
 
-## 5) Challenges in cloud cost governance for financial institutions
+### Practical meaning of the principles
+| Principle | In practice |
+|---|---|
+| Collaboration | Finance and engineering review spend together, not separately |
+| Business‑Value Decisions | Keep workloads that generate revenue or improve risk control |
+| Ownership | Every app team sees and explains its own costs |
+| Timely Data | Dashboards are reviewed weekly, not only at invoice time |
+| Variable Cost Leverage | Use shutdown schedules, reserved capacity, and rightsizing |
+
+## 5) Core FinOps lifecycle
+FinOps usually operates in a repeating loop:
+
+1. **Inform**
+   - Make cloud spend visible through reports, dashboards, tagging, and allocation.
+2. **Optimize**
+   - Find waste, right‑size workloads, remove idle resources, and use savings plans or reservations.
+3. **Operate**
+   - Build cost awareness into daily decisions, team reviews, budgets, and engineering workflows.
+
+### Example
+- A team sees a test database running 24/7.
+- They confirm it is only needed during working hours.
+- They automate shutdown at 7pm and start at 7am.
+- Finance sees the savings in the next reporting cycle.
+
+## 6) Who participates in FinOps?
+FinOps works best when responsibilities are clear.
+
+| Role | Main responsibility |
+|---|---|
+| Finance | Budgeting, forecasting, and variance analysis |
+| Engineering | Usage decisions, rightsizing, and architecture efficiency |
+| Product | Prioritizing spend based on customer and business value |
+| Operations/Cloud Team | Guardrails, tagging standards, shared dashboards |
+| Risk/Compliance | Approval controls, retention, evidence for audits |
+| Leadership | Direction, accountability, and tradeoff decisions |
+
+## 7) Challenges in cloud cost governance for financial institutions
 - **Regulatory compliance:** Need audit trails for spend and approvals.
 - **Data residency:** Costs rise when workloads are constrained to regions.
 - **Security controls:** Extra tooling and logging increase baseline cost.
@@ -64,7 +136,23 @@ Use these as the foundation for every discussion and decision:
 - **Performance risk:** Cost reductions can degrade customer experience.
 - **Shared services ambiguity:** Difficult to allocate costs fairly across teams.
 
-## 6) Hands‑on: Mapping LAPO MfB Cloud Spend Categories
+### Real examples of waste
+- Development VMs running all weekend
+- Premium storage attached to non‑critical workloads
+- Orphaned snapshots and old backups
+- Multiple teams using duplicate monitoring tools
+- Test environments sized like production
+- Unused public IPs, load balancers, or disks left behind after projects
+
+### Governance controls that usually help
+- Mandatory tagging before deployment
+- Budget alerts at team and product level
+- Approval for high‑cost SKUs or region exceptions
+- Automated shutdown for non‑production resources
+- Monthly review of idle resources and unattached assets
+- Clear ownership for all shared services
+
+## 8) Hands‑on: Mapping LAPO MfB Cloud Spend Categories
 **Objective:** Translate raw cloud costs into business‑meaningful categories.
 
 ### Step 1: Agree on LAPO MfB spend categories
@@ -103,11 +191,47 @@ Answer these with your group:
 - Which category has the most waste?
 - What 1–2 policies reduce waste without blocking delivery?
 
-## 7) Wrap‑up summary
+### Suggested discussion prompts
+- Which resources are hard to allocate, and why?
+- Which costs are essential versus avoidable?
+- What would happen if this workload doubled next month?
+- Which team should be accountable for each shared service?
+
+## 9) Quick maturity check
+Use this simple checklist to assess current FinOps maturity:
+
+| Question | Yes/No |
+|---|---|
+| Do all cloud resources have an owner? |  |
+| Do we review cloud spend at least weekly? |  |
+| Can we explain our top 10 cost drivers? |  |
+| Do we have tagging standards that teams actually follow? |  |
+| Do non‑production resources shut down automatically? |  |
+| Do we track at least one unit cost metric? |  |
+
+### Interpreting the result
+- **0–2 Yes answers:** Low visibility; start with tagging, dashboards, and ownership.
+- **3–4 Yes answers:** Foundational stage; move toward optimization and automation.
+- **5–6 Yes answers:** Strong starting point; focus on forecasting, commitments, and product‑level accountability.
+
+## 10) Key takeaways for Day 1
+- FinOps connects **technology spend** to **business value**.
+- The goal is **better decisions**, not blind cost cutting.
+- Ownership, tagging, and timely data are the starting foundation.
+- In financial services, governance and auditability matter as much as savings.
+- Small recurring optimizations compound into major annual savings.
+
+## 11) Wrap‑up summary
 - FinOps is a **culture + practice**, not just a cost report.
 - Microfinance needs FinOps because **margins are thin and regulation is strict**.
 - The 2025 principles emphasize **collaboration, ownership, and business value**.
 - Mapping spend to business categories makes cost **actionable**.
+
+## 12) Optional homework / next step
+- Identify five cloud resources in your environment and assign owners.
+- Check whether each resource has the required cost allocation tags.
+- Pick one non‑production workload that can be scheduled off after business hours.
+- Estimate one useful unit metric, such as cost per transaction or cost per customer.
 
 ---
 If you want, I can also generate a slide deck or facilitator notes from this outline.
